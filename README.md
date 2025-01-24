@@ -1,6 +1,6 @@
 # Dynamic Prompt Tester
 
-A GUI for testing dynamic prompts with wildcards. Perfect for testing text generation prompts, templates, or any text that uses dynamic placeholders.
+A GUI for testing dynamic prompts and wildcards. Perfect for testing text generation prompts, templates, or any text that uses dynamic placeholders.
 
 For more information regarding dynamic prompts: https://github.com/adieyal/sd-dynamic-prompts
 
