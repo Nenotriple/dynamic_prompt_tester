@@ -4,6 +4,16 @@ A GUI for testing dynamic prompts with wildcards. Perfect for testing text gener
 
 For more information regarding dynamic prompts: https://github.com/adieyal/sd-dynamic-prompts
 
+> [!NOTE]
+> Still in early development!
+> 
+> Interaction between tabs is limited:
+> - Only sending prompts from the "Saved Prompts" tab to the "Prompt Tester" tab is supported.
+> - Saving/loading prompts from the "Prompt Tester" tab is not yet implemented.
+>
+> Some Dynamic Prompt syntax isn't supported in the "Prompt Tester" like Weighting Options, Omitting Bounds, and some more.
+> 
+
 ## Features
 
 ### Prompt Tester
@@ -22,9 +32,6 @@ For more information regarding dynamic prompts: https://github.com/adieyal/sd-dy
 
 
 ## Usage
-Currently the app is in early development.
-
-Only sending prompts from the "Saved Prompts" tab to the "Prompt Tester" tab is supported. Saving/loading prompts from the "Prompt Tester" tab is not yet implemented.
 
 ### Basic Operation
 1. Enter your text in the input pane
