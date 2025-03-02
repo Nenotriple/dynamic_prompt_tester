@@ -9,7 +9,8 @@ from tkinter import messagebox, simpledialog, filedialog
 class TreeManager:
     def __init__(self, tree):
         self.tree = tree
-        self.tree.sort_callback = self.sort_treeview
+        if tree is not None:
+            self.tree.sort_callback = self.sort_treeview
         self.items_content = {}
         self.current_file = None
         self.default_file = "config\\prompts.json"
@@ -196,7 +197,8 @@ class TreeManager:
     def save_to_json(self, filepath=None, silent=False):
         self._temp_clear_filter()
         if not filepath:
-            filepath = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+            #filepath = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+            filepath = self.default_file
         if not filepath:
             self._restore_filter()
             return
@@ -214,9 +216,10 @@ class TreeManager:
             self._restore_filter()
 
 
-    def load_from_json(self, filepath=None, silent=False):
+    def load_from_json(self, filepath=None):
         if not filepath:
-            filepath = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+            #filepath = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+            filepath = self.default_file
         if not filepath:
             return
         try:
@@ -227,15 +230,13 @@ class TreeManager:
             self._deserialize_tree(tree_data)
             self.current_file = filepath
             self.changes_made = False
-            if not silent:
-                messagebox.showinfo("Success", "Tree loaded successfully!")
         except Exception as e:
             messagebox.showerror("ERROR - load_from_json()", f"Failed to load file: {str(e)}")
 
 
     def auto_load_file(self, silent=False):
         if os.path.exists(self.default_file):
-            self.load_from_json(self.default_file, silent=True)
+            self.load_from_json(self.default_file)
 
 
     def _serialize_tree(self, parent=''):
