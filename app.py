@@ -99,7 +99,17 @@ class MainApplication:
         # Help tab
         help_tab = ttk.Frame(notebook)
         notebook.add(help_tab, text="Help")
+
+        # Bind tab change event
+        notebook.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+
         return notebook, prompt_tester_tab, prompt_saver_tab, help_tab
+
+    def _on_tab_changed(self, event):
+        current_tab = self.notebook.select()
+        tab_text = self.notebook.tab(current_tab, "text")
+        if tab_text == "Saved Prompts":
+            self.saver_ui.interface.tree_manager.load_from_json()
 
 
     def on_close(self):
