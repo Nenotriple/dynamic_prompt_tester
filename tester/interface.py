@@ -30,6 +30,9 @@ class Interface:
         self.wildcard_path_var = tk.StringVar(value=self.wildcard_manager.wildcards_path)
         self.show_wildcards_var = tk.BooleanVar(value=True)
         self.wildcards_list = None
+        self.saved_prompts_search_var = tk.StringVar()
+        self.search_in_filename_var = tk.BooleanVar(value=True)
+        self.search_in_prompt_var = tk.BooleanVar(value=True)
         # Actions handler
         self.actions = InterfaceActions(self, parent.wildcard_manager, parent.process_text)
         # Setup interface
@@ -64,7 +67,7 @@ class Interface:
         process_button = ttk.Button(control_frame, text="Process Text", command=self.process_text)
         process_button.pack(pady=(5, 0), fill="x")
         ToolTip.create(widget=process_button, text="Process Input Text", delay=250, padx=5, pady=5)
-        self.save_prompt_button = ttk.Button(control_frame, text="Save Prompt", state="disabled")
+        self.save_prompt_button = ttk.Button(control_frame, text="Save Prompt", state="disabled", command=self.actions.on_save_prompt)
         self.save_prompt_button.pack(pady=(0, 5), fill="x")
         ToolTip.create(widget=self.save_prompt_button, text="Save current prompt", delay=250, padx=5, pady=5)
         # Create notebook
@@ -137,24 +140,33 @@ class Interface:
 
 
     def setup_saved_prompts_frame(self, parent):
+        # Folder Selection
+        self.prompt_folder_combo = ttk.Combobox(parent, state="readonly")
+        self.prompt_folder_combo.pack(fill="x", pady=2)
+        self.prompt_folder_combo.set("ALL")
+        self.prompt_folder_combo.bind('<<ComboboxSelected>>', self.actions.filter_saved_prompts)
         # Search bar
         search_frame = ttk.Frame(parent)
         search_frame.pack(fill="x", pady=5)
-        self.saved_prompts_search_var = tk.StringVar()
-        self.search_bar = ttk.Entry(search_frame, textvariable=self.saved_prompts_search_var)
-        self.search_bar.pack(side="left", fill="x", expand=True)
-        self.search_bar.bind('<KeyRelease>', self.actions.filter_saved_prompts)
+        self.saved_prompts_search_entry = ttk.Entry(search_frame, textvariable=self.saved_prompts_search_var)
+        self.saved_prompts_search_entry.pack(side="left", fill="x", expand=True)
+        self.saved_prompts_search_entry.bind('<KeyRelease>', self.actions.filter_saved_prompts)
         self.search_option_menu = ttk.Menubutton(search_frame, text="Options")
         self.search_option_menu.pack(side="right")
         self.search_option_menu.menu = tk.Menu(self.search_option_menu, tearoff=0)
         self.search_option_menu["menu"] = self.search_option_menu.menu
-        self.search_option_menu.menu.add_checkbutton(label="Search in Filename")
-        self.search_option_menu.menu.add_checkbutton(label="Search in Prompt")
+        self.search_option_menu.menu.add_command(label="Refresh", command=self.actions.refresh_json_data)
+        self.search_option_menu.menu.add_separator()
+        self.search_option_menu.menu.add_checkbutton(label="Search in Filename", variable=self.search_in_filename_var, command=self.actions.filter_saved_prompts)
+        self.search_option_menu.menu.add_checkbutton(label="Search in Prompt", variable=self.search_in_prompt_var, command=self.actions.filter_saved_prompts)
         self.search_option_menu.menu.add_separator()
         self.search_option_menu.menu.add_command(label="Show Help")
         # Saved prompts list
         self.saved_prompts_listbox = tk.Listbox(parent, height=6)
         self.saved_prompts_listbox.pack(fill="both", expand=True, pady=5)
+        self.saved_prompts_listbox.bind('<Double-Button-1>', self.actions.on_prompt_select)
+        self.actions.populate_prompt_folder_combo()
+        self.actions.populate_saved_prompts_list()
 
 
 
